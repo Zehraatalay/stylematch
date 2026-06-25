@@ -1,0 +1,16 @@
+# Dataset and generated files
+data/raw/
+data/processed/
+results/
+
+# Python
+__pycache__/
+*.pyc
+
+# Mac
+.DS_Store
+
+# Jupyter
+.ipynb_checkpoints/
+
+# VS Code local settings can stay if required, but do not track cache files
