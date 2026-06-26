@@ -51,7 +51,7 @@ def match_single_template(image,template,scales):
     for scale in scales:
         resized_template = resize_template(template,scale)
 
-        if resize_template is None:
+        if resized_template is None:
             continue
 
         template_height, template_width = resized_template.shape[:2]
