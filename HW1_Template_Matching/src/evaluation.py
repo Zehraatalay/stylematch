@@ -93,7 +93,7 @@ def detect_with_templates(image,templates,threshold):
 }
 
 
-def evaluate_detection(image_dir,metadata_path,templates,threshold,area_threshold=0.5):
+def evaluate_detection(image_dir, metadata_path, templates, threshold, area_threshold=0.5, stride_ratio=0.25):
     metadata = load_metadata(metadata_path)
 
     y_true = []
@@ -106,9 +106,10 @@ def evaluate_detection(image_dir,metadata_path,templates,threshold,area_threshol
        
 
         result = detect_with_templates(
-            image = image,
-            templates=templates,
-            threshold= threshold
+        image=image,
+        templates=templates,
+        threshold=threshold,
+        stride_ratio=stride_ratio
         )
 
         true_label = item["label"]
@@ -128,6 +129,7 @@ def evaluate_detection(image_dir,metadata_path,templates,threshold,area_threshol
     metrics = {
         "threshold": threshold,
         "area_threshold": area_threshold,
+         "stride_ratio": stride_ratio,
         "accuracy": accuracy_score(),
         "precision": precision_score(y_true,y_pred,zero_division = 0),
         "recall" : recall_score(y_true, y_pred, zero_division=0),

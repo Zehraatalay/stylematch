@@ -38,7 +38,7 @@ def resize_template(template,scale):
     return cv2.resize(template,(new_width,new_height), interpolation=cv2.INTER_AREA)
 
 
-def match_single_template(image,template,scales):
+def match_single_template(image,template,scales,stride_ratio):
     best_score = -1
     best_bbox = None
 
@@ -65,19 +65,24 @@ def match_single_template(image,template,scales):
             cv2.TM_CCOEFF_NORMED
         )
 
-
-        _,max_score, _, max_location = cv2.minMaxLoc(result)
-
+        stride = max(1, int(min(template_width, template_height) * stride_ratio))
+        sampled_result = result[::stride, ::stride]
+        _, max_score, _, sampled_location = cv2.minMaxLoc(sampled_result)
+        sampled_x, sampled_y = sampled_location
+        x = sampled_x * stride
+        y = sampled_y * stride
 
         if max_score > best_score:
-            x, y = max_location
             best_score = float(max_score)
-            best_bbox = [ x,y,x + template_width,y + template_height]
+            best_bbox = [x, y, x + template_width, y + template_height]
+
+
+
     return best_score,best_bbox
 
 
 
-def detect_with_templates(image,templates,threshold):
+def detect_with_templates(image,templates,threshold,stride_ratio=0.25):
     scales = [1.0,0.75,0.5,0.375,0.25]
 
 
@@ -90,7 +95,8 @@ def detect_with_templates(image,templates,threshold):
        score,bbox = match_single_template(
            image= image,
            template = template["image"],
-           scales=scales
+           scales=scales, 
+           stride_ratio=stride_ratio
        )
 
 

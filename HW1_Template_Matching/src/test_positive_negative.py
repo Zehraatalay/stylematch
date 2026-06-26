@@ -21,21 +21,19 @@ negative = cv2.imread(
 pos_result = detect_with_templates(
     positive,
     templates,
-    threshold=0.5
+    threshold=0.5,
+    stride_ratio=0.25
 
 )
 
 neg_result = detect_with_templates(
     negative,
     templates,
-    threshold = 0.5
+    threshold = 0.5,
+    stride_ratio=0.25
 )
 
-neg_result = detect_with_templates(
-    negative,
-    templates,
-    threshold=0.5
-)
+
 
 print("POSITIVE")
 print(pos_result)
