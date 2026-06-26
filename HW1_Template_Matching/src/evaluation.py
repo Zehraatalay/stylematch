@@ -10,77 +10,48 @@ from template_matching import detect_with_templates
 def load_metadata(metadata_path):
     with open(metadata_path, "r", encoding="utf-8") as f:
         return json.load(f)
+def intersection_area(box_a, box_b):
+    ax1, ay1, ax2, ay2 = box_a
+    bx1, by1, bx2, by2 = box_b
+
+    ix1 = max(ax1, bx1)
+    iy1 = max(ay1, by1)
+    ix2 = min(ax2, bx2)
+    iy2 = min(ay2, by2)
+
+    iw = max(0, ix2 - ix1)
+    ih = max(0, iy2 - iy1)
+
+    return iw * ih
+
+def box_ area(box)
+   x1,y1,x2,y2 = box
+   return max(0,x2-x1)*max(0,y2-y1)
+
+
+def object_coverage(pred_bbox,gt_bbox):
+   if pred_bbox is None or gt_bbox is None:
+      return 0.0
+
+    inter =intersection_area(pred_bbox,gt_bbox)
+    gt_area = box_area(gt_bbox)
+
+    if gt_area ==0:
+       return 0.0
+
+
+    return inter/gt_are
+ 
  
 
     
-    return templates
-
-def resize_template(template,scale):
-    height,width = template.shape[:2]
-
-    new_width = int(width*scale)
-    new_height = int(height*scale)
-
-    if new_width < 8 or new_height < 8:
-        return None
-    
-    return cv2.resize(template,(new_width,new_height),interpolation=cv2.INTER_AREA)
-
-def match_single_template(image,template,scales):
-    best_score = -1
-    best_bbox = None
-
-    image_height,image_width = image.shape[:2]
+   
 
 
-    for scale in scales:
-        resized_template = resize_template(template,scale)
 
 
-        if resize_template is None:
-            continue
-
-        template_height,template_width = resized_template.shape[:2]
-
-        if template_height > image_height or template_width > image_width:
-            continue
 
 
-        result = cv2.matchTemplate(
-            image,
-            resized_template,
-            cv2.TM_CCOEFF_NORMED
-        )
-
-        _,max_score,_,max_location = cv2.minMaxLoc(result)
-
-
-        if max_score > best_score:
-            x, y = max_location
-            best_score = float(max_score)
-            best_bbox = [x, y, x + template_width,y + template_height]
-
-    return best_score,best_bbox
-
-
-def detect_with_templates(image,templates,threshold):
-    scales = [1.0,0.75,0.5,0.375,0.25]
-
-
-    best_score = -1
-    best_bbox = None
-    best_template_path = template["path"]
-
-    detected = best_score >= threshold
-
-    if not detected:
-        best_bbox = None
-    return {
-    "detected": detected,
-    "score" : best_score,
-    "bbox" : best_bbox,
-    "template_path": best_template_path
-}
 
 
 def evaluate_detection(image_dir,metadat_path,templates,threshold,area_threshold=0.5):
