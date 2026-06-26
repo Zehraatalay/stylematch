@@ -1,28 +1,18 @@
 from pathlib import Path
+import json
 
 
 import cv2
+ 
+from  sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
+from template_matching import detect_with_templates
 
+def load_metadata(metadata_path):
+    with open(metadata_path, "r", encoding="utf-8") as f:
+        return json.load(f)
+ 
 
-def load_templates(template_dir):
-    template_paths =  sorted(Path(template_dir).glob("*.png"))
-
-    templates = []
-
-
-    for path in template_paths:
-        image = cv2.imread(str(path),cv2.IMREAD_GRAYSCALE)
-
-
-        if image is None:
-            raise ValueError(f"Template cant be read: {path}")
-        
-
-        templates.append({
-            "path": str(path),
-            "image": image
-        })
-
+    
     return templates
 
 def resize_template(template,scale):
