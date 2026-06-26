@@ -1,6 +1,7 @@
 import json 
 import os 
 import cv2 
+import sys
 from datasets import load_dataset
 from preprocessing import preprocess_image, scale_bbox_xyxy
 
@@ -9,8 +10,6 @@ POSITIVE_COUNT = 200
 NEGATIVE_COUNT = 600 
 
 CACHE_DIR = "data/raw/fashionpedia_cache"
-OUTPUT_IMAGE_DIR = "data/processed/val/images"
-OUTPUT_METADATA_PATH = "data/processed/val/metadata.json"
 
 def find_dress_bboxes(example) : 
     categories = example["objects"]["category"]
@@ -26,32 +25,39 @@ def bbox_area(bbox) :
     x1, y1, x2, y2 = bbox
     return (x2 - x1) * (y2 - y1)
 
-def save_processed_image(example, filename) :
+def save_processed_image(example, filename, output_image_dir) :
     image = preprocess_image(example["image"],256)
-    output_path = os.path.join(OUTPUT_IMAGE_DIR, filename)
+    output_path = os.path.join(output_image_dir, filename)
     success = cv2.imwrite(output_path, image)
     if not success : 
         raise RuntimeError()
     
-def main() : 
-    os.makedirs(OUTPUT_IMAGE_DIR, exist_ok = True)
+def prepare_split(split_name) : 
+    output_image_dir = f"data/processed/{split_name}/images"
+    output_metadata_path = f"data/processed/{split_name}/metadata.json"
+    os.makedirs(output_image_dir, exist_ok = True)
     dataset = load_dataset("detection-datasets/fashionpedia", split="train", cache_dir=CACHE_DIR)
     metadata = []
     positive_saved = 0
     negative_saved = 0 
-    for example in dataset : 
+    skipped = 0 
+    skip_count = 1000 if split_name == "test" else 0 
+    for example in dataset :
+        if skipped < skip_count :
+            skipped += 1 
+            continue 
         dress_bboxes = find_dress_bboxes(example)
         has_dress = len(dress_bboxes) > 0 
         if has_dress and positive_saved < POSITIVE_COUNT : 
             largest_bbox = max(dress_bboxes, key = bbox_area)
             scaled_bbox = scale_bbox_xyxy(largest_bbox, example["width"], example["height"], 256)
             filename = f"pos_{positive_saved:04d}.png"
-            save_processed_image(example, filename)
+            save_processed_image(example, filename, output_image_dir)
             metadata.append({"filename" : filename, "label" : 1, "bbox" : scaled_bbox})
             positive_saved += 1
         elif (not has_dress) and negative_saved < NEGATIVE_COUNT : 
             filename = f"neg_{negative_saved:04d}.png"
-            save_processed_image(example, filename)
+            save_processed_image(example, filename, output_image_dir)
 
             metadata.append({
                 "filename": filename,
@@ -61,8 +67,17 @@ def main() :
             negative_saved += 1
         if positive_saved >= POSITIVE_COUNT and negative_saved >= NEGATIVE_COUNT : 
             break
-    with open(OUTPUT_METADATA_PATH, "w", encoding="utf-8") as f : 
+    with open(output_metadata_path, "w", encoding="utf-8") as f : 
         json.dump(metadata, f, indent=2)
+
+def main() : 
+    if len(sys.argv) != 2 : 
+        return
+    split_name = sys.argv[1] 
+    if split_name not in ["val", "test"] : 
+        raise ValueError()
+    prepare_split(split_name)
+
 
 if __name__ == "__main__" : 
     main()
