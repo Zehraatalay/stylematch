@@ -6,7 +6,7 @@ def pil_to_rgb_array(image:Image.Image) -> np.ndarray:
     return np.array(image.convert("RGB"))
 
 def to_grayscale(image_rgb:np.ndarray) -> np.ndarray:
-    return cv2.cvtColor(image_rgb,cv2.COLOR_RGBA2GRAY)
+    return cv2.cvtColor(image_rgb, cv2.COLOR_RGB2GRAY)
 def resize_image(image:np.ndarray,size:int = 256) -> np.ndarray:
     return cv2.resize(image,(size,size),interpolation=cv2.INTER_AREA)
 

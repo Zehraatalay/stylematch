@@ -1,8 +1,8 @@
-from pathlib import Path
-
-
+import json 
+from pathlib import Path 
 import cv2
-
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
+from template_matching import detect_with_templates
 
 def load_templates(template_dir):
     template_paths =  sorted(Path(template_dir).glob("*.png"))
@@ -93,7 +93,7 @@ def detect_with_templates(image,templates,threshold):
 }
 
 
-def evaluate_detection(image_dir,metadat_path,templates,threshold,area_threshold=0.5):
+def evaluate_detection(image_dir,metadata_path,templates,threshold,area_threshold=0.5):
     metadata = load_metadata(metadata_path)
 
     y_true = []
@@ -126,10 +126,11 @@ def evaluate_detection(image_dir,metadat_path,templates,threshold,area_threshold
         y_true.append(true_label)
         y_pred.append(predicted_label)
     metrics = {
-        "threshold": threshold
+        "threshold": threshold,
         "area_threshold": area_threshold,
-        "accuracy": accuracy_score()
-        "precision": precission_score(y_true,y_pred,zero_division = 0),
+        "accuracy": accuracy_score(),
+        "precision": precision_score(y_true,y_pred,zero_division = 0),
+        "recall" : recall_score(y_true, y_pred, zero_division=0),
         "f1" : f1_score(y_true,y_pred,zero_diviison = 0),
         "confusion_matrix": confusion_matrix(y_true,y_pred).tolist()
 

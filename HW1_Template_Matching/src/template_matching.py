@@ -20,9 +20,8 @@ def load_templates(template_dir):
                 "image" : image
             }
         )
+    return templates
 
-
-        return templates
 def resize_template(template,scale):
     height,width = template.shape[:2]
 
@@ -62,7 +61,7 @@ def match_single_template(image,template,scales):
 
         result = cv2.matchTemplate(
             image,
-            resize_template,
+            resized_template,
             cv2.TM_CCOEFF_NORMED
         )
 
@@ -110,5 +109,3 @@ def detect_with_templates(image,templates,threshold):
         "bbox": best_bbox,
         "template_path": best_template_path
     }
-    
-

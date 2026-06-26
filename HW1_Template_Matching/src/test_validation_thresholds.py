@@ -14,7 +14,7 @@ for threshold in thresholds:
     for area_threshold in area_thresholds:
         metrics = evaluate_detection(
             image_dir = "data/processed/val/images",
-            metadata_path= "data/processed/val/images",
+            metadata_path="data/processed/val/metadata.json",
             templates = templates,
             threshold = threshold,
             area_threshold = area_threshold
