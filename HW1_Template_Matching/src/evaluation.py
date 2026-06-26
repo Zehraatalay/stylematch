@@ -26,7 +26,7 @@ def intersection_area(box_a, box_b):
 
 def box_ area(box)
    x1,y1,x2,y2 = box
-   return max(0,x2-x1)*max(0,y2-y1)
+   return max(0,x2 - x1)*max(0,y2 - y1)
 
 
 def object_coverage(pred_bbox,gt_bbox):
@@ -36,11 +36,11 @@ def object_coverage(pred_bbox,gt_bbox):
     inter =intersection_area(pred_bbox,gt_bbox)
     gt_area = box_area(gt_bbox)
 
-    if gt_area ==0:
+    if gt_area == 0:
        return 0.0
 
 
-    return inter/gt_are
+    return inter / gt_area
  
  
 
