@@ -3,10 +3,9 @@ from evaluation import evaluate_detection
 
 templates = load_templates("data/processed/train/templates")
 
-thresholds = [0.50,0.55,0.60,0.65,0.70,0.75,0.80,0.85]
-area_thresholds = [0.3,0.5,0.7]
-stride_ratios = [0.10,0.25,0.50]
-
+thresholds = [0.50, 0.60, 0.70, 0.80]
+area_thresholds = [0.3, 0.5]
+stride_ratios = [0.10, 0.25, 0.50]
 
 best_result = None
 

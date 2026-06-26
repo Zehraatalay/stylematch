@@ -38,17 +38,14 @@ def resize_template(template,scale):
     return cv2.resize(template,(new_width,new_height), interpolation=cv2.INTER_AREA)
 
 
-def match_single_template(image,template,scales,stride_ratio):
+def match_single_template(image, template, scales, stride_ratio):
     best_score = -1
     best_bbox = None
 
-
-    image_height,image_width = image.shape[:2]
-
-
+    image_height, image_width = image.shape[:2]
 
     for scale in scales:
-        resized_template = resize_template(template,scale)
+        resized_template = resize_template(template, scale)
 
         if resized_template is None:
             continue
@@ -58,7 +55,6 @@ def match_single_template(image,template,scales,stride_ratio):
         if template_height > image_height or template_width > image_width:
             continue
 
-
         result = cv2.matchTemplate(
             image,
             resized_template,
@@ -66,21 +62,22 @@ def match_single_template(image,template,scales,stride_ratio):
         )
 
         stride = max(1, int(min(template_width, template_height) * stride_ratio))
-        sampled_result = result[::stride, ::stride]
-        _, max_score, _, sampled_location = cv2.minMaxLoc(sampled_result)
-        sampled_x, sampled_y = sampled_location
-        x = sampled_x * stride
-        y = sampled_y * stride
 
-        if max_score > best_score:
-            best_score = float(max_score)
-            best_bbox = [x, y, x + template_width, y + template_height]
+        for y in range(0, result.shape[0], stride):
+            for x in range(0, result.shape[1], stride):
 
+                score = float(result[y, x])
 
+                if score > best_score:
+                    best_score = score
+                    best_bbox = [
+                        x,
+                        y,
+                        x + template_width,
+                        y + template_height
+                    ]
 
-    return best_score,best_bbox
-
-
+    return best_score, best_bbox
 
 def detect_with_templates(image,templates,threshold,stride_ratio=0.25):
     scales = [1.0,0.75,0.5,0.375,0.25]
