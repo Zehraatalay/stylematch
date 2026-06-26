@@ -19,5 +19,5 @@ metrics = evaluate_detection(
 )
 
 
-print("\nFINAL TEST RESULTS\n")
+print("\nfinal-test-results\n")
 print(metrics)
