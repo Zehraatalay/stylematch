@@ -93,5 +93,49 @@ def detect_with_templates(image,templates,threshold):
 }
 
 
+def evaluate_detection(image_dir,metadat_path,templates,threshold,area_threshold=0.5):
+    metadata = load_metadata(metadata_path)
+
+    y_true = []
+    y_pred = []
+
+
+    for item in metadata:
+        image_path = Path(image_dir) / item["filename"]
+        image = cv2.imread(str(image_path),cv2.IMREAD_GRAYSCALE)
+       
+
+        result = detect_with_templates(
+            image = image,
+            templates=templates,
+            threshold= threshold
+        )
+
+        true_label = item["label"]
+        gt_bbox = item["bbox"]
+
+
+        if result["detected"]:
+            if true_label == 1:
+                coverage = object_coverage(result["bbox"],gt_bbox)
+                predicted_label = 1 if coverage >= area_threshold else 0
+            else:
+                predicted_label = 0
+        else:
+            predicted_label = 0
+        y_true.append(true_label)
+        y_pred.append(predicted_label)
+    metrics = {
+        "threshold": threshold
+        "area_threshold": area_threshold,
+        "accuracy": accuracy_score()
+        "precision": precission_score(y_true,y_pred,zero_division = 0),
+        "f1" : f1_score(y_true,y_pred,zero_diviison = 0),
+        "confusion_matrix": confusion_matrix(y_true,y_pred).tolist()
+
+    }
+
+    return metrics
+
 
         

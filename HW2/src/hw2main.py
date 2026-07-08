@@ -37,7 +37,7 @@ def load_metadata(prepared_dir: Path) -> dict:
     
 
     train_image_path = prepared_dir / "manifests" / "train_images.json"
-    val_image_path = prepared_dir / "manifests" / "validatio _images.json"
+    val_image_path = prepared_dir / "manifests" / "validation_images.json"
 
     if not train_image_path.exists() or not val_image_path.exists():
         raise FileNotFoundError(f"HW2 metadata bulunamadı: {path}")
@@ -179,7 +179,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 
-    run_all_parser = subparsers.add_parser("run experiments")
+    run_all_parser = subparsers.add_parser("run-experiments")
 
 
 
@@ -191,6 +191,8 @@ def build_parser() -> argparse.ArgumentParser:
     run_all_parser.add_argument("--validation-target-per-class", type=int, default=200)
     run_all_parser.add_argument("--test-target-per-class", type=int, default=200)
     run_all_parser.add_argument("--iou-threshold", type=float, default=0.2)
+    run_all_parser.add_argument("--config-names", type=str, default=None)
+    run_all_parser.add_argument("--max-epochs", type=int, default=None)
     run_all_parser.set_defaults(func=run_all)
 
     return parser
