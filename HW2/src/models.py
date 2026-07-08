@@ -13,8 +13,8 @@ class ObjectRecord :
     category_id : int 
     bbox : tuple[float, float, float, float]
     area_ratio : float
-    bbox_height : float
     bbox_width : float
+    bbox_height : float
 
 
 @dataclass
