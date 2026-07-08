@@ -60,6 +60,7 @@ def evaluate_predictions(true_labels : np.ndarray, pred_labels : np.ndarray, lab
         "weighted_f1" : float(f1_score(true_labels, pred_labels, average="weighted", zero_division=0)),
         "classification_report" : report,
         "confusion_matrix" : cm.tolist(),
+        "labels" : label_order,
         "per_class" : per_class,
     }
 
