@@ -26,3 +26,22 @@ class RowRecord :
     height : int 
     selected_boxes : list[tuple[float, float, float, float]]
     categories : set[int]
+
+def ensure_dir(path : Path) -> Path : 
+    path.mkdir(parents=True, exist_ok=True)
+    return path
+
+def save_json(path : Path, payload) -> None : 
+    ensure_dir(path.parent)
+    path.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
+
+def load_fashionpedia() : 
+    from datasets import load_dataset 
+    return load_dataset("detection-datasets/fashionpedia")
+
+def get_category_names(dataset_dict) -> dict[int, str] : 
+    try : 
+        feature = dataset_dict["train"].features["objects"]["category"].feature 
+        return {i : n for i,n in enumerate(feature.names)} if getattr(feature, "names", None) else {}
+    except Exception : 
+        return {}
