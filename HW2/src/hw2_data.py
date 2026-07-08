@@ -7,9 +7,11 @@ from pathlib import Path
 
 import numpy as np 
 from tqdm import tqdm 
+from indexing  import normalize_bbox,image_to_gray
+from models import ensure_dir,load_fashionpedia,get_category_names
 
-from stylematch.data import (ensure_dir, get_category_names, image_to_gray, load_fashionpedia, normalize_bbox,)
-from stylematch.hw2_features import (WINDOW_COORDS, extract_window_feature, resize_gray_image,)
+from hw2_features import IMAGE_SIZE, WINDOW_COORDS, extract_window_feature, resize_gray_image
+
 SPLIT_ORDER = ("train", "validation", "test")
  
 def bbox_area(bbox) :

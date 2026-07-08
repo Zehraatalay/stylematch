@@ -17,12 +17,14 @@ WINDOW_COORDS = [
 
 
 @lru_cache(maxsize=1)
+
 def get_hog_descriptor() -> cv2.HOGDescriptor:
-    return  cv2.HOGDescriptor(
-        _winSize = (64,128),
-        _blockSize= (16,16),
-        _blockStride = (8,8),
-        _nbins= 9,
+    return cv2.HOGDescriptor(
+        (64, 128),
+        (16, 16),
+        (8, 8),
+        (8, 8),
+        9,
     )
 
 
