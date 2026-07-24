@@ -47,7 +47,7 @@ def plot_sweep(rows) :
     ax1.set_ylabel("sure (s)")
     ax2.set_ylabel("macro F1 (object classes)")
     fig.tight_layout()
-    plt.savefig("hyperparam_sweep.png", dpii=160)
+    plt.savefig("hyperparam_sweep.png", dpi=160)
     plt.close()
 
 def hyperparam_sweep(K_list, D_list, iou_thresh = 0.3, margin = 0.08, min_object_prob = 0.20) : 

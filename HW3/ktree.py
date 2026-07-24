@@ -58,17 +58,17 @@ def choose_class(probs, min_margin=0.08, min_object_prob=0.20) :
 def class_probs(desc, kmeans_models, K, leaf_class_counts, class_totals, num_classes=None, norm_power = 0.5) :
     if num_classes is None : 
         num_classes = len(class_totals) -1
-        scores = np.zeros(num_classes + 1, dtype=float)
-        if desc is None or len(desc) == 0 :
-            scores[0] = 1.0
-            return scores
-        denom = np.power(np.maximum(class_totals, 1.0), float(norm_power)) 
-        for d in desc : 
-            leaf = predict_leaf(d, kmeans_models, K)
-            if leaf in leaf_class_counts : 
-                scores += leaf_class_counts[leaf] / denom
-        total = scores.sum()
-        if total <= 0 : 
-            scores[0] = 1.0 
-            return scores
-        return scores / total
+    scores = np.zeros(num_classes + 1, dtype=float)
+    if desc is None or len(desc) == 0 :
+        scores[0] = 1.0
+        return scores
+    denom = np.power(np.maximum(class_totals, 1.0), float(norm_power)) 
+    for d in desc : 
+        leaf = predict_leaf(d, kmeans_models, K)
+        if leaf in leaf_class_counts : 
+            scores += leaf_class_counts[leaf] / denom
+    total = scores.sum()
+    if total <= 0 : 
+        scores[0] = 1.0 
+        return scores
+    return scores / total
