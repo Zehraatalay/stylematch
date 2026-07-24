@@ -76,3 +76,13 @@ def hyperparam_sweep(K_list, D_list, iou_thresh = 0.3, margin = 0.08, min_object
             pickle.dump({"kmeans_models" : models, "leaf_counts" : leaf_counts, "class_totals" : class_totals, "K" : K, "D" : D, "train_time" : elapsed, }, f)
 
     return rows
+
+if __name__ == "__main__" : 
+    args = parse_args()
+    rows = hyperparam_sweep(K_list=[4, 8, 16], D_list=[2, 3, 4], iou_thresh=args.iou, margin=args.margin, min_object_prob=args.min_object_prob,)
+    plot_sweep(rows)
+    suggest_best(rows)
+    data = np.load("features.npz")
+    with open("ktree_model.pkl", "rb") as f :
+        best = pickle.load(f)
+    plot_pca(best["kmeans_models"], data["Xtr"], data["ytr"])
