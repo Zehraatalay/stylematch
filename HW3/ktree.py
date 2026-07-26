@@ -1,6 +1,7 @@
 import numpy as np 
 from sklearn.cluster import KMeans
 def build_ktree(X,K,D) : 
+    print(f"ktree training started: N={N}, K={K}, D={D}")
     N = X.shape[0]
     cluster_label = np.zeros((N, D), dtype=int)
     kmeans_models = [[None] * (K ** lvl) for lvl in range(D)]
@@ -17,6 +18,7 @@ def build_ktree(X,K,D) :
             new_node_of[idx] = p * K + km.labels_
         node_of = new_node_of
         cluster_label[:, lvl] = node_of
+    print("ktree training completed")
     return kmeans_models, cluster_label
 def predict_leaf(x, kmeans_models, K) : 
     node = 0

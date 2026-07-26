@@ -10,6 +10,8 @@ def train( K = K, D = D, num_classes = 10, path = "features.npz") :
     train_time = time.time() - t0
     with open("ktree_model.pkl", "wb") as f : 
         pickle.dump({"kmeans_models" : kmeans_models, "leaf_counts" : leaf_counts, "class_totals" : class_totals, "K" : K, "D" : D, "train_time" : train_time}, f)
+        print(f"model saved to ktree_model.pkl")
+        print(f"training completed in {train_time:.2f} seconds")
     return kmeans_models, leaf_counts, class_totals, train_time 
 
 if __name__ == "__main__" : 

@@ -64,6 +64,13 @@ def hyperparam_sweep(K_list, D_list, iou_thresh = 0.3, margin = 0.08, min_object
             macro_precision = float(np.mean([r[1] for r in object_rows]))
             macro_recall = float(np.mean([r[2] for r in object_rows]))
             macro_f1 = float(np.mean([r[3] for r in object_rows]))
+            print(
+                f"Accuracy={acc:.3f} | "
+                f"Macro Precision={macro_precision:.3f} | "
+                f"Macro Recall={macro_recall:.3f} | "
+                f"Macro F1={macro_f1:.3f} | "
+                f"Train Time={elapsed:.2f}s"
+            )
             rows.append(((K, D, elapsed, acc, macro_precision, macro_recall, macro_f1)))
 
             if macro_f1 > best_macro_f1 :
