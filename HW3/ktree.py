@@ -1,7 +1,6 @@
 import numpy as np 
 from sklearn.cluster import KMeans
 def build_ktree(X,K,D) : 
-    print(f"ktree training started: N={N}, K={K}, D={D}")
     N = X.shape[0]
     cluster_label = np.zeros((N, D), dtype=int)
     kmeans_models = [[None] * (K ** lvl) for lvl in range(D)]
@@ -57,7 +56,7 @@ def choose_class(probs, min_margin=0.08, min_object_prob=0.20) :
         return 0
     return best
 
-def class_probs(desc, kmeans_models, K, leaf_class_counts, class_totals, num_classes=None, norm_power = 0.5) :
+def class_probs(desc, kmeans_models, K, leaf_class_counts, class_totals, num_classes=None, norm_power = 1.0, min_leaf_support = 5) :
     if num_classes is None : 
         num_classes = len(class_totals) -1
     scores = np.zeros(num_classes + 1, dtype=float)
@@ -65,12 +64,18 @@ def class_probs(desc, kmeans_models, K, leaf_class_counts, class_totals, num_cla
         scores[0] = 1.0
         return scores
     denom = np.power(np.maximum(class_totals, 1.0), float(norm_power)) 
+    used_any = False
     for d in desc : 
         leaf = predict_leaf(d, kmeans_models, K)
-        if leaf in leaf_class_counts : 
-            scores += leaf_class_counts[leaf] / denom
-    total = scores.sum()
-    if total <= 0 : 
+        counts = leaf_class_counts.get(leaf)
+        if counts is None : 
+            continue
+        if counts.sum() < min_leaf_support : 
+            continue
+        scores += counts / denom
+        used_any = True
+    if not used_any or scores.sum() <= 0 : 
         scores[0] = 1.0 
         return scores
-    return scores / total
+    return scores / scores.sum()
+  

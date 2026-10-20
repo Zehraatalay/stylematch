@@ -163,7 +163,6 @@ if __name__ == "__main__":
     train_ds = load_dataset("detection-datasets/fashionpedia", split = "train")
     official_test_ds = load_dataset("detection-datasets/fashionpedia", split="val")
 
-
     classes = top_classes(train_ds)
     class_map = { c: i+1 for i, c in enumerate(classes)}
     train_by_class, train_img_classes = index_images(train_ds, classes)

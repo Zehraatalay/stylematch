@@ -60,6 +60,8 @@ def hyperparam_sweep(K_list, D_list, iou_thresh = 0.3, margin = 0.08, min_object
         for D in D_list : 
             kmeans_models, leaf_counts, class_totals, elapsed = train(K=K, D=D)
             cm, report_rows, acc = evaluate(val_raw, kmeans_models, K, leaf_counts, class_totals, iou_thresh=iou_thresh, min_margin=margin, min_object_prob=min_object_prob,)
+            print("GT class counts:       ", cm.sum(axis=1))
+            print("Predicted class counts:", cm.sum(axis=0))
             object_rows = report_rows[1 :]
             macro_precision = float(np.mean([r[1] for r in object_rows]))
             macro_recall = float(np.mean([r[2] for r in object_rows]))

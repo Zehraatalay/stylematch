@@ -47,7 +47,7 @@ def pick_and_show(m, test_raw, n_examples=3, iou_thresh=0.3, margin=0.08, min_ob
             print(f"saved: {out_path}")
 
 def draw(img128, gt_boxes, kmeans_models, K, leaf_counts, class_totals, out_path, iou_thresh=0.3, margin=0.08, min_object_prob=0.20,) :
-    preds, gts, boxes_out = detect_image(img128, gt_boxes, kmeans_models, K, leaf_counts, class_totals, iou_thresh=iou_thresh, margin=margin, min_object_prob=min_object_prob,)
+    preds, gts, boxes_out = detect_image(img128, gt_boxes, kmeans_models, K, leaf_counts, class_totals, iou_thresh=iou_thresh, min_margin=margin, min_object_prob=min_object_prob,)
     vis = cv2.cvtColor(img128, cv2.COLOR_GRAY2BGR)
     colors = [(0,0,255), (0,255,0), (255,0,0), (0,255,255), (255,0,255), (255,255,0)]
     for cls, box, prob in boxes_out : 

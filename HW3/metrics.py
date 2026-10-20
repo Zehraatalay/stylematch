@@ -6,7 +6,7 @@ def confusion_matrix(y_true, y_pred, num_labels) :
     return cm
 
 def print_report(rows, accuracy) : 
-    print(f"{'class' :> 6}{'precision' :> 11}{'recall' :> 9}{'f1' :> 8}{'support' :> 9}")
+    print(f"{'class':>6}{'precision':>11}{'recall':>9}{'f1':>8}{'support':>9}")
     for c, p, r, f, s in rows :
         print(f"{c:>6}{p:>11.3f}{r:>9.3f}{f:>8.3f}{s:>9d}")
     print(f"accuracy : {accuracy:.3f}")
