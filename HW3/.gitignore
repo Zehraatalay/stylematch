@@ -1,0 +1,12 @@
+# Generated datasets and serialized models
+features.npz
+raw_images.pkl
+split_info.pkl
+ktree_model.pkl
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Local environment
+.DS_Store
