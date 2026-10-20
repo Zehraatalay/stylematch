@@ -1,0 +1,14 @@
+# Datasets and generated pair splits
+pairs_stylematch/
+strict_disjoint/
+data/
+*.parquet
+
+# Model weights, experiment outputs, and caches
+outputs/
+*.pt
+*.pth
+*.ckpt
+__pycache__/
+*.py[cod]
+.DS_Store
